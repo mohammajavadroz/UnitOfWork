@@ -8,13 +8,13 @@ using UnitOfWork.Data.Repository;
 
 namespace UnitOfWork.Data.InfraStructure
 {
-    public class UnitOfWork<TContext> : IUnitOfWork<TContext> where TContext : DBContext, new()
+    public class UnitOfWork<TContext> : IUnitOfWork<TContext> where TContext : DBContext
     {
        protected readonly DBContext _dbcontext;
 
-        public UnitOfWork()
+        public UnitOfWork(DBContext dbcontext)
         {
-            _dbcontext = new TContext();
+            _dbcontext = dbcontext;
         }
 
         public void Commit()
