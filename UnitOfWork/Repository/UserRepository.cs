@@ -11,7 +11,7 @@ namespace UnitOfWork.Data.Repository
 {
     public interface IUserRepository : IRepository<User>
     {
-
+        //Private Functions
     }
     public class UserRepository : Repository<User>, IUserRepository
     {
@@ -19,7 +19,7 @@ namespace UnitOfWork.Data.Repository
 
         public UserRepository(DBContext dbcontext):base(dbcontext) 
         {
-            _dbcontext = (dbcontext??(DBContext)_dbcontext);
+            _dbcontext = dbcontext;
         }
     }
 }
