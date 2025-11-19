@@ -4,32 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UnitOfWork.Data.InfraStructure
+namespace UnitOfWork.Shared.InfraStructure.Repository
 {
-    public interface IRepository<TEntity> where TEntity : class
+    public interface IRepository<TEntity, Tkey> where TEntity : class
     {
         void Insert(TEntity entity);
         void Update(TEntity entity);
-        
-
-        void Delete(object Id);
-
-
-        TEntity GetById(object Id);
-
+        void Delete(Tkey Id);
+        TEntity GetById(Tkey Id);
         List<TEntity> GetAll();
-
-       
         //async functions
+
+        IQueryable<TEntity> GetQueryable();
         Task InsertAsync(TEntity entity);
         Task<List<TEntity>> GetAllAsync();
-
-        Task<TEntity> GetByIdAsync(object Id);
-
-        
-
-        
-
-
+        Task<TEntity> GetByIdAsync(Tkey Id);
     }
 }

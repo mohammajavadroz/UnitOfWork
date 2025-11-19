@@ -5,11 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UnitOfWork.Entity.Models
+namespace UnitOfWork.Domain.Models
 {
     public class BaseEntity <T>
     {
-        [Key]
         public T Id { get; set; }
     }
 }

@@ -7,24 +7,27 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using UnitOfWork.Data.DatabaseContext;
 using UnitOfWork.Data.InfraStructure;
+using UnitOfWork.Data.Repository;
 using UnitOfWork.Entity.Models;
 
 namespace UOW.Web.Controllers
 {
     public class UsersController : Controller
     {
-        //private readonly DBContext _context;
-        private readonly UnitOfWork<DBContext> _context;
+        private readonly IUserRepository _userRepository;
+        private readonly IUnitOfWorkManager<ShopDbContext> _context;
 
-        public UsersController(UnitOfWork<DBContext> context)
+        public UsersController(IUserRepository userRepository, IUnitOfWorkManager<ShopDbContext> context)
         {
+            _userRepository = userRepository;
             _context = context;
         }
+
 
         // GET: Users
         public async Task<IActionResult> Index()
         {
-            return View(await _context.UserRepository.GetAllAsync());
+            return View(await _userRepository.GetAllAsync());
         }
 
         // GET: Users/Details/5
@@ -35,7 +38,7 @@ namespace UOW.Web.Controllers
                 return NotFound();
             }
 
-            var user = await _context.UserRepository.GetByIdAsync(id);
+            var user = await _userRepository.GetByIdAsync(id);
                
             if (user == null)
             {
@@ -60,7 +63,7 @@ namespace UOW.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.UserRepository.Insert(user);
+                _userRepository.Insert(user);
                 await _context.CommitAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -75,7 +78,7 @@ namespace UOW.Web.Controllers
                 return NotFound();
             }
 
-            var user = await _context.UserRepository.GetByIdAsync(id);
+            var user = await _userRepository.GetByIdAsync(id);
             if (user == null)
             {
                 return NotFound();
@@ -99,7 +102,7 @@ namespace UOW.Web.Controllers
             {
                 try
                 {
-                    _context.UserRepository.Update(user);
+                    _userRepository.Update(user);
                     await _context.CommitAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -126,7 +129,7 @@ namespace UOW.Web.Controllers
                 return NotFound();
             }
 
-            var user = await _context.UserRepository.GetByIdAsync(id);
+            var user = await _userRepository.GetByIdAsync(id);
                 
             if (user == null)
             {
@@ -141,8 +144,8 @@ namespace UOW.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var user = await _context.UserRepository.GetByIdAsync(id);
-            _context.UserRepository.Delete(user);
+            var user = await _userRepository.GetByIdAsync(id);
+            _userRepository.Delete(user);
             await _context.CommitAsync();
            
             return RedirectToAction(nameof(Index));
@@ -150,7 +153,7 @@ namespace UOW.Web.Controllers
 
         private bool UserExists(string id)
         {
-            return Convert.ToBoolean(_context.UserRepository.GetById(id));
+            return Convert.ToBoolean(_userRepository.GetById(id));
         }
     }
 }
